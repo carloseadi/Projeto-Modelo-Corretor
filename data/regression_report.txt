@@ -1,0 +1,6 @@
+Vencedor da Regressao: Ridge
+
+Métricas (Base de Teste):
+Ridge: RMSE = 1.3190 | R2 = 0.9383 | MAE = 1.0828
+Random Forest: RMSE = 1.3200 | R2 = 0.9382 | MAE = 1.0837
+LightGBM: RMSE = 1.3197 | R2 = 0.9382 | MAE = 1.0833

@@ -1,0 +1,24 @@
+# ─── Core Data Science ───────────────────────────────────────────────────────
+pandas
+numpy
+scipy
+
+# ─── Machine Learning ────────────────────────────────────────────────────────
+scikit-learn
+xgboost
+lightgbm
+imbalanced-learn
+
+# ─── Visualization ───────────────────────────────────────────────────────────
+matplotlib
+seaborn
+
+# ─── Parquet / Storage ───────────────────────────────────────────────────────
+pyarrow
+fastparquet
+
+# ─── PDF Generation ──────────────────────────────────────────────────────────
+reportlab
+
+# ─── EDA Report ──────────────────────────────────────────────────────────────
+ydata-profiling

@@ -1,0 +1,20 @@
+Vencedor: Random Forest
+
+Features do Forward Selection:
+['is_casco_depois', 'Premio_antes', 'Score_Serasa_antes', 'mudanca_premio', 'Origem_RENOVACAO HDI', 'diff_score_serasa', 'status_prem_Diminuiu', 'regestudo_antes_SPC', 'status_is_Diminuiu', 'regestudo_antes_RGS', 'regestudo_antes_SPI', 'regestudo_antes_PR', 'regestudo_antes_SC', 'filial_antes_Piracicaba', 'filial_antes_Porto Alegre']
+
+Relatorio de Classificação:
+              precision    recall  f1-score   support
+
+    Aumentou       0.90      0.78      0.83     12779
+    Diminuiu       0.90      0.83      0.86     16299
+     Manteve       0.59      0.76      0.67     10922
+
+    accuracy                           0.79     40000
+   macro avg       0.80      0.79      0.79     40000
+weighted avg       0.82      0.79      0.80     40000
+
+Acurácias:
+Logistic Regression: 0.6695
+Random Forest: 0.7925
+LightGBM: 0.7906
