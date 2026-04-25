@@ -58,6 +58,13 @@ A predição numérica lidou com desvios percentuais com métricas excelentes, v
 
 ![Densidade: Previsto VS Real no Teste](images/reg_hexbin.png)
 
+> **🧪 Painel Visual — Validação de Resíduos (Normalidade & Homocedasticidade)**
+
+Os resíduos seguem a normalidade e homocedasticidade esperadas, validando a estabilidade do modelo.
+
+![Normalidade: Q-Q Plot](images/reg_qq_plot.png)
+![Homocedasticidade: Resíduos vs Ajustados](images/reg_homo.png)
+
 ---
 
 ## 4. O Sistema Mestre Combinado: Lógica de Ensemble

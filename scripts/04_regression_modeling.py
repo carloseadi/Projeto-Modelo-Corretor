@@ -135,7 +135,35 @@ def main():
         
         plt.tight_layout()
         pdf.savefig(fig)
-        plt.close()
+        
+        # Save separately for the executive report
+        axes[0].figure.savefig(IMAGES_DIR / "reg_qq_plot.png", bbox_inches='tight', dpi=300)
+        
+        # To save the second one correctly, we might need to be careful with axes
+        # Actually, axes[1] belongs to the same figure. We can save the whole figure or crop.
+        # Better: just create them separately if we want clean separate files.
+        plt.close(fig)
+
+        # Q-Q Plot Separate
+        fig_qq, ax_qq = plt.subplots(figsize=(8, 6))
+        stats.probplot(res_test.iloc[idx_te], dist="norm", plot=ax_qq)
+        ax_qq.set_title('Normalidade: Q-Q Plot dos Residuos')
+        ax_qq.grid(True, linestyle='--', alpha=0.5)
+        plt.tight_layout()
+        fig_qq.savefig(IMAGES_DIR / "reg_qq_plot.png", bbox_inches='tight', dpi=300)
+        plt.close(fig_qq)
+
+        # Homoscedasticity Separate
+        fig_homo, ax_homo = plt.subplots(figsize=(8, 6))
+        ax_homo.scatter(preds_test[idx_te], res_test.iloc[idx_te], alpha=0.3, color='#F39C12')
+        ax_homo.axhline(y=0, color='red', linestyle='--')
+        ax_homo.set_title('Homocedasticidade: Residuos vs Valores Ajustados')
+        ax_homo.set_xlabel('Valor Previsto')
+        ax_homo.set_ylabel('Erro (Residuo)')
+        ax_homo.grid(True, linestyle='--', alpha=0.5)
+        plt.tight_layout()
+        fig_homo.savefig(IMAGES_DIR / "reg_homo.png", bbox_inches='tight', dpi=300)
+        plt.close(fig_homo)
         
         # Pag 4: Erro por Segmento de Negocio
         fig, ax = plt.subplots(figsize=(10, 6))

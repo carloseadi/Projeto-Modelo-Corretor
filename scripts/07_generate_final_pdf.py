@@ -10,7 +10,7 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm, mm
 from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, Image,
-                                 HRFlowable, Table, TableStyle, PageBreak)
+                                 HRFlowable, Table, TableStyle, PageBreak, KeepTogether)
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
 
 ROOT = Path(__file__).parent.parent
@@ -273,22 +273,26 @@ story.append(metrics_table_4(
 ))
 story.append(Spacer(1, 8))
 
-story.append(panel_header("📊  KPI Dashboard — Classificadores Multi-Classe (Random Forest)"))
-story += img_block(str(IMAGES_DIR / "class_kpis.png"),
-    "Painel executivo: Acurácia Global (~79%), Acurácia Balanceada, Log-Loss e Brier Score em Treino e Teste — com tabela de Precision / Recall / F1-Score por classe.",
-    width_fraction=0.90, max_height_cm=12)
-
-story.append(Paragraph("<b>Detalhamento por Classe no Conjunto de Teste:</b>", ST_H3))
-story.append(class_detail_table([
-    ("Aumentou", "0.896", "0.777", "0.833", "12.779"),
-    ("Diminuiu", "0.900", "0.828", "0.862", "16.299"),
-    ("Manteve",  "0.594", "0.758", "0.666", "10.922"),
+story.append(KeepTogether([
+    panel_header("📊  KPI Dashboard — Classificadores Multi-Classe (Random Forest)"),
+    *img_block(str(IMAGES_DIR / "class_kpis.png"),
+              "Painel executivo: Acurácia Global (~79%), Acurácia Balanceada, Log-Loss e Brier Score em Treino e Teste — com tabela de Precision / Recall / F1-Score por classe.",
+              width_fraction=0.90, max_height_cm=12)
 ]))
-story.append(Spacer(1, 6))
-story.append(Paragraph(
-    "A classe <b>Manteve</b> apresenta F1-Score inferior (~0.67) — comportamento esperado em cenários de "
-    "equilíbrio de preço. As classes <b>Aumentou</b> (F1: 0.83) e <b>Diminuiu</b> (F1: 0.86) demonstram "
-    "alta assertividade, que é exatamente o valor de negócio essencial para o precificador.", ST_BODY))
+
+story.append(KeepTogether([
+    Paragraph("<b>Detalhamento por Classe no Conjunto de Teste:</b>", ST_H3),
+    class_detail_table([
+        ("Aumentou", "0.896", "0.777", "0.833", "12.779"),
+        ("Diminuiu", "0.900", "0.828", "0.862", "16.299"),
+        ("Manteve",  "0.594", "0.758", "0.666", "10.922"),
+    ]),
+    Spacer(1, 6),
+    Paragraph(
+        "A classe <b>Manteve</b> apresenta F1-Score inferior (~0.67) — comportamento esperado em cenários de "
+        "equilíbrio de preço. As classes <b>Aumentou</b> (F1: 0.83) e <b>Diminuiu</b> (F1: 0.86) demonstram "
+        "alta assertividade, que é exatamente o valor de negócio essencial para o precificador.", ST_BODY)
+]))
 
 story.append(Paragraph("<b>Curvas ROC (One-vs-Rest) e Precision-Recall:</b>", ST_H3))
 story.append(Paragraph(
@@ -297,11 +301,13 @@ story.append(Paragraph(
     "<b>Manteve (0.78)</b> reflete a classe naturalmente mais difusa. "
     "A maior Average Precision na curva PR é <b>Diminuiu (AP: 0.86)</b>, seguida de <b>Aumentou (AP: 0.84)</b>.", ST_BODY))
 
-story.append(panel_header("📈  ROC Curve (OVR) & Precision-Recall Curve — Teste"))
-story += img_block(str(IMAGES_DIR / "class_roc_pr.png"),
-    "Esquerda: ROC Curve OVR — AUC de 0.93 (Aumentou), 0.92 (Diminuiu) e 0.78 (Manteve). Todas superiores ao random-guess. "
-    "Direita: Precision-Recall Curve — Average Precision de 0.84, 0.86 e 0.54 respectivamente.",
-    width_fraction=1.0, max_height_cm=9)
+story.append(KeepTogether([
+    panel_header("📈  ROC Curve (OVR) & Precision-Recall Curve — Teste"),
+    *img_block(str(IMAGES_DIR / "class_roc_pr.png"),
+              "Esquerda: ROC Curve OVR — AUC de 0.93 (Aumentou), 0.92 (Diminuiu) e 0.78 (Manteve). Todas superiores ao random-guess. "
+              "Direita: Precision-Recall Curve — Average Precision de 0.84, 0.86 e 0.54 respectivamente.",
+              width_fraction=1.0, max_height_cm=9)
+]))
 
 story.append(Paragraph("<b>Calibração Probabilística e Importância de Variáveis:</b>", ST_H3))
 story.append(Paragraph(
@@ -310,11 +316,13 @@ story.append(Paragraph(
     "<i>Feature Importance</i> pelo Índice Gini revela que <b>Premio_antes</b> e <b>Score_Serasa_antes</b> "
     "são as variáveis mestras — evidenciando que o modelo reproduz o raciocínio do analista de negócios.", ST_BODY))
 
-story.append(panel_header("🎯  Reliability Diagram (Calibração) & Top 10 Variáveis Importantes"))
-story += img_block(str(IMAGES_DIR / "class_calib_imp.png"),
-    "Esquerda: Curva de Calibração — alinhamento entre probabilidade prevista e frequência real por classe. "
-    "Direita: Top 10 Variáveis por Score de Importância Gini — Premio_antes e Score_Serasa_antes lideram.",
-    width_fraction=1.0, max_height_cm=9)
+story.append(KeepTogether([
+    panel_header("🎯  Reliability Diagram (Calibração) & Top 10 Variáveis Importantes"),
+    *img_block(str(IMAGES_DIR / "class_calib_imp.png"),
+              "Esquerda: Curva de Calibração — alinhamento entre probabilidade prevista e frequência real por classe. "
+              "Direita: Top 10 Variáveis por Score de Importância Gini — Premio_antes e Score_Serasa_antes lideram.",
+              width_fraction=1.0, max_height_cm=9)
+]))
 
 story.append(Paragraph("<b>Matrizes de Confusão — Treino e Teste:</b>", ST_H3))
 story.append(Paragraph(
@@ -322,11 +330,13 @@ story.append(Paragraph(
     "(<i>Aumentou ↔ Diminuiu</i>), que representaria o erro de maior custo de negócio. "
     "Os erros observados concentram-se na fronteira com <i>Manteve</i> — padrão esperado e aceitável.", ST_BODY))
 
-story.append(panel_header("🔲  Matrizes de Confusão — Treino (Azul) & Teste (Laranja)", colors.HexColor('#7d3c00')))
-story += img_block(str(IMAGES_DIR / "class_confusion.png"),
-    "Diagonal dominante confirma alta concordância real-previsto. Erros mais frequentes ocorrem entre "
-    "Manteve e as demais classes — padrão esperado pela natureza fuzzy da classe neutra.",
-    width_fraction=1.0, max_height_cm=9)
+story.append(KeepTogether([
+    panel_header("🔲  Matrizes de Confusão — Treino (Azul) & Teste (Laranja)", colors.HexColor('#7d3c00')),
+    *img_block(str(IMAGES_DIR / "class_confusion.png"),
+              "Diagonal dominante confirma alta concordância real-previsto. Erros mais frequentes ocorrem entre "
+              "Manteve e as demais classes — padrão esperado pela natureza fuzzy da classe neutra.",
+              width_fraction=1.0, max_height_cm=9)
+]))
 
 story.append(HR())
 
@@ -352,10 +362,12 @@ for b in bullets_reg:
     story.append(Paragraph(f"• {b}", ST_BULLET))
 story.append(Spacer(1, 6))
 
-story.append(panel_header("📈  KPIs do Modelo de Regressão — Ridge Regression (Modelo Vencedor)", GREEN))
-story += img_block(str(IMAGES_DIR / "reg_kpis.png"),
-    "Painel executivo com R² Ajustado (0.973), RMSE (0.912), MAE (0.723), MAPE (5,0%) e RMSLE (0.063) — Treino e Teste simétricos.",
-    width_fraction=0.70, max_height_cm=12)
+story.append(KeepTogether([
+    panel_header("📈  KPIs do Modelo de Regressão — Ridge Regression (Modelo Vencedor)", GREEN),
+    *img_block(str(IMAGES_DIR / "reg_kpis.png"),
+              "Painel executivo com R² Ajustado (0.973), RMSE (0.912), MAE (0.723), MAPE (5,0%) e RMSLE (0.063) — Treino e Teste simétricos.",
+              width_fraction=0.70, max_height_cm=12)
+]))
 
 story.append(Paragraph("<b>Diagnóstico de Densidade — Previsto VS Real:</b>", ST_H3))
 story.append(Paragraph(
@@ -363,10 +375,34 @@ story.append(Paragraph(
     "mantém colada à diagonal de concordância perfeita em todo o range de comissões — de tickets baixos a "
     "altíssimos — sem alargamento de erros nas extremidades.", ST_BODY))
 
-story.append(panel_header("🔬  Diagnóstico de Densidade — Previsto VS Real (Hexbin Scatter)", GREEN))
-story += img_block(str(IMAGES_DIR / "reg_hexbin.png"),
-    "Hexbin Scatter de densidade. Concentração central na diagonal confirma homocedasticidade e ausência de viés sistemático.",
-    width_fraction=0.50, max_height_cm=12)
+story.append(KeepTogether([
+    panel_header("🔬  Diagnóstico de Densidade — Previsto VS Real (Hexbin Scatter)", GREEN),
+    *img_block(str(IMAGES_DIR / "reg_hexbin.png"),
+              "Hexbin Scatter de densidade. Concentração central na diagonal confirma homocedasticidade e ausência de viés sistemático.",
+              width_fraction=0.50, max_height_cm=12)
+]))
+
+# Adicionando os dois gráficos lado a lado
+img_qq = img_block(str(IMAGES_DIR / "reg_qq_plot.png"), "Normalidade: Q-Q Plot", width_fraction=0.48)
+img_ho = img_block(str(IMAGES_DIR / "reg_homo.png"), "Homocedasticidade", width_fraction=0.48)
+
+if img_qq and img_ho:
+    data_res = [[img_qq[0], img_ho[0]], [img_qq[1], img_ho[1]]]
+    t_res = Table(data_res, colWidths=[PAGE_WIDTH/2, PAGE_WIDTH/2])
+    t_res.setStyle(TableStyle([
+        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+        ('LEFTPADDING', (0,0), (-1,-1), 0),
+        ('RIGHTPADDING', (0,0), (-1,-1), 0),
+    ]))
+    
+    story.append(KeepTogether([
+        Paragraph("<b>Diagnóstico de Resíduos (Normalidade e Homocedasticidade):</b>", ST_H3),
+        Paragraph(
+            "Os resíduos seguem a normalidade e homocedasticidade esperadas, validando a estabilidade do modelo.", ST_BODY),
+        t_res,
+        Spacer(1, 6)
+    ]))
 
 story.append(HR())
 
@@ -391,18 +427,23 @@ story.append(Paragraph(
     "<b>redução de ~8,4% no erro absoluto</b> pela aplicação das regras de negócio do precificador "
     "especialista sobre a saída bruta do modelo.", ST_BODY))
 
-story.append(panel_header("⚖️  Distribuição dos Erros & Real vs Previsto — Ensemble vs Regressão Pura"))
-story += img_block(str(IMAGES_DIR / "Final_Evaluation_Plot.png"),
-    "Esquerda: Kernel Density dos Erros — Regressão Pura (vermelho) vs Ensemble corrigido (azul). "
-    "Direita: Scatter Real vs Previsto — pontos do Ensemble agrupados ao redor da diagonal ideal.",
-    width_fraction=1.0, max_height_cm=9)
+story.append(KeepTogether([
+    panel_header("⚖️  Distribuição dos Erros & Real vs Previsto — Ensemble vs Regressão Pura"),
+    *img_block(str(IMAGES_DIR / "Final_Evaluation_Plot.png"),
+              "Esquerda: Kernel Density dos Erros — Regressão Pura (vermelho) vs Ensemble corrigido (azul). "
+              "Direita: Scatter Real vs Previsto — pontos do Ensemble agrupados ao redor da diagonal ideal.",
+              width_fraction=1.0, max_height_cm=9)
+]))
 
-story.append(panel_header("🎯  MAE Comparativo & Superfície de Correção do Ensemble"))
-story += img_block(str(IMAGES_DIR / "ens_density.png"),
-    "Esquerda: Comparativo MAE — Regressão Pura (0.7234) vs Ensemble (0.6629): redução de 8,4% no erro. "
-    "Direita: Superfície de Correção mostrando o ajuste fino do Ensemble nos pontos de discordância.",
-    width_fraction=1.0, max_height_cm=9)
+story.append(KeepTogether([
+    panel_header("🎯  MAE Comparativo & Superfície de Correção do Ensemble"),
+    *img_block(str(IMAGES_DIR / "ens_density.png"),
+              "Esquerda: Comparativo MAE — Regressão Pura (0.7234) vs Ensemble (0.6629): redução de 8,4% no erro. "
+              "Direita: Superfície de Correção mostrando o ajuste fino do Ensemble nos pontos de discordância.",
+              width_fraction=1.0, max_height_cm=9)
+]))
 
+story.append(PageBreak())
 story.append(HR())
 
 # ══════════════════════════════════════════════
