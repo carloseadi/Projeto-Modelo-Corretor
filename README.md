@@ -71,4 +71,3 @@ Localizados na pasta **`reports/`**:
 Base Final de Consumo em **`data/BASE_OUTPUT_FINAL_PRONTA.parquet`**.
 
 ---
-_Projeto desenvolvido por AI Pair-Programming Assistant Autônomo._
